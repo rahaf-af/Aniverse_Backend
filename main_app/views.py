@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Anime
-from .serializers import Animeserializer 
+from .models import Anime , Profile
+from .serializers import Animeserializer , Profileserializer , Postserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 
@@ -53,3 +53,4 @@ class AnimeDetail(APIView):
             return Response({'message': f'Anime {Anime_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+
