@@ -17,7 +17,7 @@ class User(AbstractUser):
         super().save(*args, **kwargs)
 
 class Admin(User):
-    base_role =User.Role. ADMIN
+    base_role =User.Role.ADMIN
     class Meta:
         proxy = True
 

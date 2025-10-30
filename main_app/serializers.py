@@ -1,4 +1,4 @@
-from .models import Anime, Profile, Post
+from .models import Anime, Profile, Post , Review, AnimeFavorit, PostComment, PostFavorit
 from rest_framework import serializers
 
 class Animeserializer(serializers.ModelSerializer):
