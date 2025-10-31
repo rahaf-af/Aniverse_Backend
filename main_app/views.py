@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Anime , Profile , Post , User
-from .serializers import Animeserializer , Profileserializer , Postserializer, Userserializer
+from .serializers import Animeserializer , Profileserializer , Postserializer, Userserializer 
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
@@ -14,6 +14,7 @@ from rest_framework.permissions import (
 # Create your views here.
 # ---------------User---------------
 class Signup(APIView):
+    # ---------------Create user---------------
     permission_classes = [AllowAny]
     def post(self, request):
         first_name = request.data.get("first_name")
@@ -39,14 +40,39 @@ class Signup(APIView):
 
     
 class DeleteUser(APIView):
+     # ---------------Delete user---------------
+    permission_classes = [IsAuthenticated]
     def delete(self, request):
         user = User.objects.get(id = request.user)
         user.delete()
         return Response()
-        
 
 
-# ---------------Anime CRUD---------------
+
+# ---------------Profile---------------
+class ProfileDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    # ---------------Profile Detail---------------
+    def get(self, request, Profile_id):
+        queryset = get_object_or_404(Profile,id=Profile_id)
+        serializer = Profileserializer(queryset)
+        return Response(serializer.data)
+    
+    # ---------------Update Profile---------------
+    def put(self, request, Profile_id):
+        try:
+            queryset = get_object_or_404(Profile,id=Profile_id)
+            serializer = Profileserializer(queryset, data= request.data)
+            if serializer.is_valid():
+               serializer.save()
+               return Response(serializer.data,status =status.HTTP_200_OK )
+            return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+
+
+# ---------------Anime---------------
 class AnimeIndex(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Read Anime---------------
@@ -67,6 +93,7 @@ class AnimeIndex(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
 class AnimeDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Anime Detail---------------
     def get(self, request, Anime_id):
         queryset = get_object_or_404(Anime,id=Anime_id)
@@ -95,8 +122,9 @@ class AnimeDetail(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# ---------------Post CRUD---------------
+# ---------------Post---------------
 class PostIndex(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Read Post---------------
     def get(self, request ):
         queryset = Post.objects.all()
@@ -115,6 +143,7 @@ class PostIndex(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
 class PostDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Post Detail---------------
     def get(self, request, Post_id):
         queryset = get_object_or_404(Post,id=Post_id)
