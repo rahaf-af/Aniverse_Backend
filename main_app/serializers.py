@@ -5,15 +5,28 @@ from rest_framework import serializers
 class Userserializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "username", "first_name" , "last_name", "password" ]
+        fields = ["id", "username", "first_name" , "last_name","email", "password" ]
         extra_kwargs ={
             "password": {"write_only": True}
         }
 
+class Profileserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 class Animeserializer(serializers.ModelSerializer):
+    review_count = serializers.IntegerField(source= 'anime_comment.count', read_only = True)
+    favorit_count = serializers.IntegerField(source= 'anime_favorit.count', read_only = True)
     class Meta:
         model = Anime
         fields = '__all__'
+
+class Reviewserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    class Meta:
+        model = Review
+        fields = ['id','user','anime', 'text', 'rating', 'created_at' ]
 
 class Profileserializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +34,14 @@ class Profileserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Postserializer(serializers.ModelSerializer):
+    comment_count = serializers.IntegerField(source= 'post_comment.count', read_only = True)
+    favorit_count = serializers.IntegerField(source= 'post_favorit.count', read_only = True)
     class Meta:
         model = Post
         fields = '__all__'
+
+class PostCommentserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    class Meta:
+        model = PostComment
+        fields = ['id','user','post ', 'text', 'created_at' ]

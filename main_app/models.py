@@ -51,17 +51,18 @@ class Anime (models.Model):
         return f'{self.title}'
 
 class AnimeFavorit (models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE , related_name="anime_favorit")
-    anime = models.ForeignKey(Anime, on_delete= models.CASCADE )
+    user = models.ForeignKey(User, on_delete= models.CASCADE )
+    anime = models.ForeignKey(Anime, on_delete= models.CASCADE , related_name="anime_favorit")
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE , related_name="anime_comment")
-    anime = models.ForeignKey(Anime, on_delete= models.CASCADE )
+    user = models.ForeignKey(User, on_delete= models.CASCADE )
+    anime = models.ForeignKey(Anime, on_delete= models.CASCADE, related_name="anime_comment" )
     text= models.CharField(max_length=100, null=True , blank=True)
-    rating =models.PositiveIntegerField(default=0)
+    rating =models.PositiveIntegerField(choices=[(i , i)for i in range(1,6)])
     created_at = models.DateTimeField(auto_now_add=True)
-
+    def __str__(self):
+        return f'Review of {self.anime.title}, by {self.user.username}'
 
 
 #---------------Post---------------
@@ -72,12 +73,14 @@ class Post (models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class PostFavorit (models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE , related_name="post_favorit")
-    post= models.ForeignKey(Post, on_delete= models.CASCADE)
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
+    post= models.ForeignKey(Post, on_delete= models.CASCADE, related_name="post_favorit")
     created_at =models.DateTimeField(auto_now_add=True)
 
 class PostComment(models.Model):
-    user = models.ForeignKey(User, on_delete= models.CASCADE , related_name="anime_post")
-    anime = models.ForeignKey(Post, on_delete= models.CASCADE )
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
+    post = models.ForeignKey(Post, on_delete= models.CASCADE , related_name="post_comment")
     text= models.CharField(max_length=100, null=True , blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'Comment of Post {self.post.id} by {self.user.username}'
