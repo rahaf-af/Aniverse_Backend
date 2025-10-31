@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Anime , Profile , Post , User
-from .serializers import Animeserializer , Profileserializer , Postserializer
+from .serializers import Animeserializer , Profileserializer , Postserializer, Userserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
@@ -14,19 +14,29 @@ from rest_framework.permissions import (
 # Create your views here.
 # ---------------User---------------
 class Signup(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
+        first_name = request.data.get("first_name")
+        last_name = request.data.get("last_name")
         username = request.data.get("username")
         email = request.data.get("email")
         password = request.data.get("password")
 
-        if not username or not email or not password:
+        if not first_name or not last_name or not username or not email or not password:
             return Response({"error":" please provide a username,email and password "},status =status.HTTP_400_BAD_REQUEST)
  
         if User.objects.filter(username = username).exists():
-            return Response({"error":"user Already exists"})
+            return Response({"error":"user Already exists"},status =status.HTTP_400_BAD_REQUEST)
         
-        user = User.objects.create_user(username=username, email=email, password=password )
-        return Response({"id":user.id,"username":user.username,"email":user.email,"password":user.password })
+        try:
+            serializer = Userserializer(data= request.data)
+            if serializer.is_valid():
+               serializer.save()
+               return Response(serializer.data,status =status.HTTP_201_CREATED )
+            return Response({'message': f'user {username} has been created !!! '},serializer.errors,status =status.HTTP_400_BAD_REQUEST )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+
     
 class DeleteUser(APIView):
     def delete(self, request):
@@ -38,6 +48,7 @@ class DeleteUser(APIView):
 
 # ---------------Anime CRUD---------------
 class AnimeIndex(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Read Anime---------------
     def get(self, request ):
         queryset = Anime.objects.all()

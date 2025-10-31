@@ -15,6 +15,8 @@ class User(AbstractUser):
         if not self.pk:
             self.role = self.base_role
         super().save(*args, **kwargs)
+    def __str__(self):
+        return self.username
 
 class Admin(User):
     base_role =User.Role.ADMIN
