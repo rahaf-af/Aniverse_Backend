@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Anime , Profile , Post , User
-from .serializers import Animeserializer , Profileserializer , Postserializer, Userserializer 
+from .models import User , Profile, Anime , Review , Post 
+from .serializers import  Userserializer, Profileserializer, Animeserializer ,Reviewserializer , Postserializer ,PostCommentserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
@@ -10,6 +10,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
+
 
 # Create your views here.
 # ---------------User---------------
@@ -24,7 +25,7 @@ class Signup(APIView):
         password = request.data.get("password")
 
         if not first_name or not last_name or not username or not email or not password:
-            return Response({"error":" please provide a username,email and password "},status =status.HTTP_400_BAD_REQUEST)
+            return Response({"error":" please provide your first name,last_name, username,email and password "},status =status.HTTP_400_BAD_REQUEST)
  
         if User.objects.filter(username = username).exists():
             return Response({"error":"user Already exists"},status =status.HTTP_400_BAD_REQUEST)
@@ -121,6 +122,29 @@ class AnimeDetail(APIView):
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+# ---------------Interact with Anime---------------
+class  AnimeReviewIndex(APIView):
+    # ---------------Read Anime Review---------------
+    def get(self, request, Anime_id):
+        queryset = Review.objects.filter(anime=Anime_id)
+        serializer = Reviewserializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    # ---------------Create Anime Review---------------
+    def post(self, request, Anime_id):
+        try:
+            serializer = Reviewserializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                queryset = Review.objects.filter(Anime=Anime_id)
+                serializer = Reviewserializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+        
 
 # ---------------Post---------------
 class PostIndex(APIView):
