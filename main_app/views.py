@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User , Profile, Anime , Review , Post 
+from .models import User , Profile, Anime , Review , Post , PostComment
 from .serializers import  Userserializer, Profileserializer, Animeserializer ,Reviewserializer , Postserializer ,PostCommentserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -63,6 +63,8 @@ class ProfileDetail(APIView):
     def put(self, request, Profile_id):
         try:
             queryset = get_object_or_404(Profile,id=Profile_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to edit other users profiles.'},serializer.errors,status =status.HTTP_403_FORBIDDEN )
             serializer = Profileserializer(queryset, data= request.data)
             if serializer.is_valid():
                serializer.save()
@@ -70,7 +72,9 @@ class ProfileDetail(APIView):
             return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
+    
+
+
 
 
 # ---------------Anime---------------
@@ -87,7 +91,7 @@ class AnimeIndex(APIView):
         try:
             serializer = Animeserializer(data= request.data)
             if serializer.is_valid():
-               serializer.save()
+               serializer.save(publisher= request.user)
                return Response(serializer.data,status =status.HTTP_201_CREATED )
             return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
         except Exception as error: 
@@ -105,6 +109,8 @@ class AnimeDetail(APIView):
     def put(self, request, Anime_id):
         try:
             queryset = get_object_or_404(Anime,id=Anime_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to edit other users Anime.'},serializer.errors,status =status.HTTP_403_FORBIDDEN )
             serializer = Animeserializer(queryset, data= request.data)
             if serializer.is_valid():
                serializer.save()
@@ -117,6 +123,8 @@ class AnimeDetail(APIView):
     def delete(self, request, Anime_id):
         try:
             queryset = get_object_or_404(Anime,id=Anime_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to delete other users Anime.'},status =status.HTTP_403_FORBIDDEN )
             queryset.delete()
             return Response({'message': f'Anime {Anime_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
@@ -137,13 +145,27 @@ class  AnimeReviewIndex(APIView):
         try:
             serializer = Reviewserializer(data = request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(user=request.user)
                 queryset = Review.objects.filter(Anime=Anime_id)
                 serializer = Reviewserializer(queryset, many=True)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+        
+class DeleteAnimeReview(APIView):
+# ---------------Delete Anime Review---------------
+    def delete(self, request, Review_id):
+        try:
+            queryset = get_object_or_404(Review,id=Review_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to delete other users reviews.'},status =status.HTTP_403_FORBIDDEN )
+            queryset.delete()
+            return Response({'message': f'Review {Review_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
         
 
 # ---------------Post---------------
@@ -160,7 +182,7 @@ class PostIndex(APIView):
         try:
             serializer = Postserializer(data= request.data)
             if serializer.is_valid():
-               serializer.save()
+               serializer.save(auther= request.user)
                return Response(serializer.data,status =status.HTTP_201_CREATED )
             return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
         except Exception as error: 
@@ -178,6 +200,8 @@ class PostDetail(APIView):
     def put(self, request, Post_id):
         try:
             queryset = get_object_or_404(Post,id=Post_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to edit other users posts.'},serializer.errors,status =status.HTTP_403_FORBIDDEN )
             serializer = Postserializer(queryset, data= request.data)
             if serializer.is_valid():
                serializer.save()
@@ -190,6 +214,8 @@ class PostDetail(APIView):
     def delete(self, request, Post_id):
         try:
             queryset = get_object_or_404(Post,id=Post_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to delete other users posts.'},status =status.HTTP_403_FORBIDDEN )
             queryset.delete()
             return Response({'message': f'Post {Post_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
