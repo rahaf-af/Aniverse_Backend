@@ -55,6 +55,7 @@ class Postserializer(serializers.ModelSerializer):
 
 class PostCommentserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
+    post = serializers.StringRelatedField()
     class Meta:
         model = PostComment
-        fields = ['id','user','post ', 'text', 'created_at' ]
+        fields = ['id','user','post', 'text', 'created_at' ]

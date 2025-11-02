@@ -221,4 +221,38 @@ class PostDetail(APIView):
             return Response({'message': f'Post {Post_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    # ---------------Interact with post---------------
+class  PostCommentIndex(APIView):
+    # ---------------Read Post Comment---------------
+    def get(self, request, Post_id):
+        queryset = PostComment.objects.filter(post=Post_id)
+        serializer = PostCommentserializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    # ---------------add Post Comment---------------
+    def post(self, request, Post_id):
+        try:
+            serializer = PostCommentserializer(data = request.data)
+            if serializer.is_valid():
+                post = get_object_or_404(Post,id=Post_id)
+                serializer.save(post=post,user=request.user)
+                queryset = PostComment.objects.filter(post=Post_id)
+                serializer = PostCommentserializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+        
+class DeletePostComment(APIView):
+# ---------------Delete Post Comment---------------
+    def delete(self, request, Comment_id):
+        try:
+            queryset = get_object_or_404(PostComment,id=Comment_id)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to delete other users reviews.'},status =status.HTTP_403_FORBIDDEN )
+            queryset.delete()
+            return Response({'message': f'Comment {Comment_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
