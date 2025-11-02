@@ -187,7 +187,7 @@ class RemoveAnimeFromFavorit(APIView):
         try:
             queryset = get_object_or_404(AnimeFavorit,id=Favorit_id, user=request.user)
             if request.user != queryset.user:
-                return Response({'message': 'You do not have permission to delete other users reviews.'},status =status.HTTP_403_FORBIDDEN )
+                return Response({'message': 'You do not have permission to remove Anime From other users Favorit list !!!.'},status =status.HTTP_403_FORBIDDEN )
             queryset.delete()
             return Response({'message': f'Anime has been Removed from Favorit list !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
@@ -282,4 +282,32 @@ class DeletePostComment(APIView):
             return Response({'message': f'Comment {Comment_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class AddPostToFavorit(APIView):
+    # ---------------Add Post To Favorit---------------
+    def post(self, request, Post_id):
+        try:
+            serializer = PostFavoritserializer(data = request.data)
+            if serializer.is_valid():
+                post = get_object_or_404(Post,id=Post_id)
+                serializer.save(post=post,user=request.user)
+                queryset = PostFavorit.objects.filter(post=Post_id)
+                serializer = PostFavoritserializer(queryset, many=True)
+                return Response({'message': f'Post {Post_id} has been added to your favorit list !! ', 'data':serializer.data}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+
+class RemovePostFromFavorit(APIView):
+    # ---------------Remove Post From Favorit---------------
+    def delete(self, request, Favorit_id):
+        try:
+            queryset = get_object_or_404(PostFavorit,id=Favorit_id, user=request.user)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to remove Post From other users Favorit list !!!.'},status =status.HTTP_403_FORBIDDEN )
+            queryset.delete()
+            return Response({'message': f'Post has been Removed from Favorit list !!! '},status =status.HTTP_204_NO_CONTENT )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 

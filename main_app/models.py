@@ -79,6 +79,8 @@ class PostFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     post= models.ForeignKey(Post, on_delete= models.CASCADE, related_name="post_favorit")
     created_at =models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'Favorit id {self.id} post id {self.post.id} added by {self.user.username}'
 
 class PostComment(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
