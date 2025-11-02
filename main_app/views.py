@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User , Profile, Anime , Review , Post , PostComment
-from .serializers import  Userserializer, Profileserializer, Animeserializer ,Reviewserializer , Postserializer ,PostCommentserializer
+from .models import User , Profile, Anime , Review ,AnimeFavorit, Post , PostComment, PostFavorit
+from .serializers import  Userserializer, Profileserializer, Animeserializer, AnimeFavoritserializer, Reviewserializer, Postserializer, PostFavoritserializer, PostCommentserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
@@ -165,6 +165,21 @@ class DeleteAnimeReview(APIView):
             return Response({'message': f'Review {Review_id} has been deleted !!! '},status =status.HTTP_204_NO_CONTENT )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class AddAnimeToFavorit(APIView):
+    # ---------------Add Anime To Favorit---------------
+    def post(self, request, Anime_id):
+        try:
+            serializer = AnimeFavoritserializer(data = request.data)
+            if serializer.is_valid():
+                anime = get_object_or_404(Anime,id=Anime_id)
+                serializer.save(anime=anime,user=request.user)
+                queryset = AnimeFavorit.objects.filter(anime=Anime_id)
+                serializer = AnimeFavoritserializer(queryset, many=True)
+                return Response({'message': f'Anime {Anime_id} has been added to your favorit list !! '}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
 
         

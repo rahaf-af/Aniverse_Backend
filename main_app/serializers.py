@@ -33,6 +33,13 @@ class Animeserializer(serializers.ModelSerializer):
         model = Anime
         fields = '__all__'
 
+class AnimeFavoritserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    anime = serializers.StringRelatedField()
+    class Meta:
+        model = AnimeFavorit
+        fields = '__all__'
+
 class Reviewserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     anime = serializers.StringRelatedField()
@@ -51,6 +58,13 @@ class Postserializer(serializers.ModelSerializer):
     favorit_count = serializers.IntegerField(source= 'post_favorit.count', read_only = True)
     class Meta:
         model = Post
+        fields = '__all__'
+
+class PostFavoritserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    post = serializers.StringRelatedField()
+    class Meta:
+        model = PostFavorit
         fields = '__all__'
 
 class PostCommentserializer(serializers.ModelSerializer):
