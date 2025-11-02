@@ -36,19 +36,21 @@ class Profile(models.Model):
     phone_number = models.CharField(max_length=10, null=True , blank=True)
     email = models.EmailField(null=True , blank=True)
     bio = models.TextField(null=True , blank=True)
+    def __str__(self):
+        return f'Profile for {self.user.username}'
 
 
 
 #---------------Anime---------------
 class Anime (models.Model):
-    publisher = models.ForeignKey(User, on_delete= models.SET_NULL , null=True , blank=True)
+    publisher = models.ForeignKey(User, on_delete= models.CASCADE)
     title = models.CharField(max_length=50)
     poster = models.URLField( null=True , blank=True )
     genre = models.CharField(max_length=100 , default='Action')
     global_rating =models.FloatField(default=0.0)
     description = models.TextField(default= 'No description yet', null=True , blank=True)
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.id}:{self.title}'
 
 class AnimeFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )

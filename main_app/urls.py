@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Signup,DeleteUser,ProfileDetail, AnimeIndex , AnimeDetail ,AnimeReviewIndex, PostIndex , PostDetail
+from .views import Signup,DeleteUser,ProfileDetail, AnimeIndex , AnimeDetail ,AnimeReviewIndex,DeleteAnimeReview, PostIndex , PostDetail
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('animes/',AnimeIndex.as_view() , name= 'Anime_Index'),
     path('anime/<int:Anime_id>/', AnimeDetail.as_view(), name= 'Anime_Detail'),
     path('anime/<int:Anime_id>/review', AnimeReviewIndex.as_view(), name= 'Anime_Review_Index'),
+    path('delete/<int:Review_id>/review', DeleteAnimeReview.as_view(), name= 'Anime_Review_Index'),
     path('posts/',PostIndex.as_view() , name= 'Post_Index'),
     path('post/<int:Post_id>/', PostDetail.as_view(), name= 'Post_Detail')
 ] 

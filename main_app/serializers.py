@@ -26,6 +26,7 @@ class Profileserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Animeserializer(serializers.ModelSerializer):
+    publisher = serializers.StringRelatedField()
     review_count = serializers.IntegerField(source= 'anime_comment.count', read_only = True)
     favorit_count = serializers.IntegerField(source= 'anime_favorit.count', read_only = True)
     class Meta:
@@ -34,6 +35,7 @@ class Animeserializer(serializers.ModelSerializer):
 
 class Reviewserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
+    anime = serializers.StringRelatedField()
     class Meta:
         model = Review
         fields = ['id','user','anime', 'text', 'rating', 'created_at' ]
@@ -44,6 +46,7 @@ class Profileserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Postserializer(serializers.ModelSerializer):
+    auther = serializers.StringRelatedField()
     comment_count = serializers.IntegerField(source= 'post_comment.count', read_only = True)
     favorit_count = serializers.IntegerField(source= 'post_favorit.count', read_only = True)
     class Meta:
