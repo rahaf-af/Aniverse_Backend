@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Signup, DeleteUser, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, AnimeReviewIndex, DeleteAnimeReview, PostIndex, PostDetail, PostCommentIndex, DeletePostComment
+from .views import Signup, DeleteUser, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, DeleteAnimeReview, PostIndex, PostDetail, PostCommentIndex, DeletePostComment
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('animes/',AnimeIndex.as_view() , name= 'Anime_Index'),
     path('anime/<int:Anime_id>/', AnimeDetail.as_view(), name= 'Anime_Detail'),
     path('add/<int:Anime_id>/tofavorit', AddAnimeToFavorit.as_view(), name= 'Add_Anime_To_Favorit'),
+    path('remove/<int:Favorit_id>/fromfavorit', RemoveAnimeFromFavorit.as_view(), name= 'Remove_Anime_From_Favorit'),
     path('anime/<int:Anime_id>/review', AnimeReviewIndex.as_view(), name= 'Anime_Review_Index'),
     path('delete/<int:Review_id>/review', DeleteAnimeReview.as_view(), name= 'Anime_Review_Index'),
     path('posts/',PostIndex.as_view() , name= 'Post_Index'),

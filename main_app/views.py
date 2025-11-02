@@ -176,10 +176,22 @@ class AddAnimeToFavorit(APIView):
                 serializer.save(anime=anime,user=request.user)
                 queryset = AnimeFavorit.objects.filter(anime=Anime_id)
                 serializer = AnimeFavoritserializer(queryset, many=True)
-                return Response({'message': f'Anime {Anime_id} has been added to your favorit list !! '}, status=status.HTTP_201_CREATED)
+                return Response({'message': f'Anime {Anime_id} has been added to your favorit list !! ', 'data':serializer.data}, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+
+class RemoveAnimeFromFavorit(APIView):
+    # ---------------Remove Anime From Favorit---------------
+    def delete(self, request, Favorit_id):
+        try:
+            queryset = get_object_or_404(AnimeFavorit,id=Favorit_id, user=request.user)
+            if request.user != queryset.user:
+                return Response({'message': 'You do not have permission to delete other users reviews.'},status =status.HTTP_403_FORBIDDEN )
+            queryset.delete()
+            return Response({'message': f'Anime has been Removed from Favorit list !!! '},status =status.HTTP_204_NO_CONTENT )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
         

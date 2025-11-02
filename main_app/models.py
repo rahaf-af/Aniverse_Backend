@@ -56,7 +56,8 @@ class AnimeFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )
     anime = models.ForeignKey(Anime, on_delete= models.CASCADE , related_name="anime_favorit")
     created_at = models.DateTimeField(auto_now_add=True)
-
+    def __str__(self):
+        return f'Favorit id {self.id} anime id {self.anime.id} added by {self.user.username}'
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )
     anime = models.ForeignKey(Anime, on_delete= models.CASCADE, related_name="anime_comment" )
