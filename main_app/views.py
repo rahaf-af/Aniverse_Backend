@@ -73,7 +73,12 @@ class ProfileDetail(APIView):
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-
+class MyProfile(APIView):
+    # ---------------My Profile Detail---------------
+    def get(self, request):
+        queryset = get_object_or_404(Profile,user=request.user)
+        serializer = Profileserializer(queryset)
+        return Response(serializer.data)
 
 
 
@@ -109,7 +114,7 @@ class AnimeDetail(APIView):
     def put(self, request, Anime_id):
         try:
             queryset = get_object_or_404(Anime,id=Anime_id)
-            if request.user != queryset.user:
+            if request.user != queryset.publisher:
                 return Response({'message': 'You do not have permission to edit other users Anime.'},serializer.errors,status =status.HTTP_403_FORBIDDEN )
             serializer = Animeserializer(queryset, data= request.data)
             if serializer.is_valid():

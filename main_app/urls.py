@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Signup, DeleteUser, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, PostCommentIndex, DeletePostComment
+from .views import Signup, DeleteUser,MyProfile, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, PostCommentIndex, DeletePostComment
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -7,7 +7,8 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('deleteuser/', DeleteUser.as_view(), name='delete_user'),
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh' ),
-    path('profile/<int:profile_id>/', ProfileDetail.as_view(), name= 'Profile_Detail'),
+    path('profile/<int:Profile_id>/', ProfileDetail.as_view(), name= 'Profile_Detail'),
+    path('myprofile/', MyProfile.as_view(), name= 'MyProfile'),
     path('animes/',AnimeIndex.as_view() , name= 'Anime_Index'),
     path('anime/<int:Anime_id>/', AnimeDetail.as_view(), name= 'Anime_Detail'),
     path('addanime/<int:Anime_id>/tofavorit', AddAnimeToFavorit.as_view(), name= 'Add_Anime_To_Favorit'),

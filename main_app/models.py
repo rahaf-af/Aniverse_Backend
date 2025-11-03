@@ -50,7 +50,7 @@ class Anime (models.Model):
     global_rating =models.FloatField(default=0.0)
     description = models.TextField(default= 'No description yet', null=True , blank=True)
     def __str__(self):
-        return f'{self.id}:{self.title}'
+        return f'{self.id}: {self.title}'
 
 class AnimeFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )

@@ -21,6 +21,7 @@ class Userserializer(serializers.ModelSerializer):
             return user
 
 class Profileserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only = True)
     class Meta:
         model = Profile
         fields = '__all__'
