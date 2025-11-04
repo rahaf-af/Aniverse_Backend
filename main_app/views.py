@@ -199,7 +199,12 @@ class RemoveAnimeFromFavorit(APIView):
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+class MyAnimeToFavoritList(APIView):
+    # ---------------Read User Favorit List---------------
+    def get(self, request):
+        queryset = Review.objects.filter(user=request.user)
+        serializer = Reviewserializer(queryset, many=True)
+        return Response(serializer.data)
         
 
 # ---------------Post---------------
@@ -257,6 +262,7 @@ class PostDetail(APIView):
         
     # ---------------Interact with post---------------
 class  PostCommentIndex(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Read Post Comment---------------
     def get(self, request, Post_id):
         queryset = PostComment.objects.filter(post=Post_id)
@@ -316,4 +322,9 @@ class RemovePostFromFavorit(APIView):
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+class MyPostToFavoritList(APIView):
+    # ---------------Read User Favorit List---------------
+    def get(self, request):
+        queryset = PostFavorit.objects.filter(user=request.user)
+        serializer = PostCommentserializer(queryset, many=True)
+        return Response(serializer.data)
