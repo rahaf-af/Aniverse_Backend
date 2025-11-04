@@ -139,6 +139,7 @@ class AnimeDetail(APIView):
 
 # ---------------Interact with Anime---------------
 class  AnimeReviewIndex(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     # ---------------Read Anime Review---------------
     def get(self, request, Anime_id):
         queryset = Review.objects.filter(anime=Anime_id)
