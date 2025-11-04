@@ -56,8 +56,11 @@ class AnimeFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )
     anime = models.ForeignKey(Anime, on_delete= models.CASCADE , related_name="anime_favorit")
     created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('user','anime')
     def __str__(self):
         return f'Favorit id {self.id} anime id {self.anime.id} added by {self.user.username}'
+    
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE )
     anime = models.ForeignKey(Anime, on_delete= models.CASCADE, related_name="anime_comment" )
@@ -79,6 +82,8 @@ class PostFavorit (models.Model):
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     post= models.ForeignKey(Post, on_delete= models.CASCADE, related_name="post_favorit")
     created_at =models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('user','post')
     def __str__(self):
         return f'Favorit id {self.id} post id {self.post.id} added by {self.user.username}'
 

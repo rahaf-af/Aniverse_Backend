@@ -35,8 +35,9 @@ class Animeserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AnimeFavoritserializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    user = serializers.StringRelatedField(read_only = True)
     anime = serializers.StringRelatedField()
+    anime_poster = serializers.CharField(source= 'anime.poster', read_only = True)
     class Meta:
         model = AnimeFavorit
         fields = '__all__'
@@ -64,6 +65,7 @@ class Postserializer(serializers.ModelSerializer):
 class PostFavoritserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     post = serializers.StringRelatedField()
+    post_poster = serializers.CharField(source= 'post.poster', read_only = True)
     class Meta:
         model = PostFavorit
         fields = '__all__'
