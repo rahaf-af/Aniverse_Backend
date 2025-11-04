@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Signup, DeleteUser,MyProfile, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, MyAnimeToFavoritList, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, MyPostToFavoritList, PostCommentIndex, DeletePostComment
+from .views import Signup, DeleteUser,MyProfile, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, MyAnimeToFavoritList, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, MyPostToFavoritList, PostCommentIndex, DeletePostComment, Contactus
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -7,12 +7,13 @@ urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('deleteuser/', DeleteUser.as_view(), name='delete_user'),
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh' ),
+    path('contact/',Contactus.as_view(), name='contact_us' ),
     path('profile/<int:Profile_id>/', ProfileDetail.as_view(), name= 'Profile_Detail'),
     path('myprofile/', MyProfile.as_view(), name= 'MyProfile'),
     path('animes/',AnimeIndex.as_view() , name= 'Anime_Index'),
     path('anime/<int:Anime_id>/', AnimeDetail.as_view(), name= 'Anime_Detail'),
-    path('addanime/<int:Anime_id>/tofavorit', AddAnimeToFavorit.as_view(), name= 'Add_Anime_To_Favorit'),
-    path('removeanime/<int:Favorit_id>/fromfavorit', RemoveAnimeFromFavorit.as_view(), name= 'Remove_Anime_From_Favorit'),
+    path('addanime/<int:Anime_id>/tofavorit/', AddAnimeToFavorit.as_view(), name= 'Add_Anime_To_Favorit'),
+    path('removeanime/<int:Favorit_id>/fromfavorit/', RemoveAnimeFromFavorit.as_view(), name= 'Remove_Anime_From_Favorit'),
     path('myanimefavoritlist/',MyAnimeToFavoritList.as_view() , name= 'My_Anime_Favorit_List'),
     path('anime/<int:Anime_id>/review/', AnimeReviewIndex.as_view(), name= 'Anime_Review_Index'),
     path('delete/<int:Review_id>/review', DeleteAnimeReview.as_view(), name= 'Anime_Review_Index'),

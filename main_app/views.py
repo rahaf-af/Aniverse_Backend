@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import User , Profile, Anime , Review ,AnimeFavorit, Post , PostComment, PostFavorit
-from .serializers import  Userserializer, Profileserializer, Animeserializer, AnimeFavoritserializer, Reviewserializer, Postserializer, PostFavoritserializer, PostCommentserializer
+from .models import User , Profile, Anime , Review ,AnimeFavorit, Post , PostComment, PostFavorit , Contact
+from .serializers import  Userserializer, Profileserializer, Animeserializer, AnimeFavoritserializer, Reviewserializer, Postserializer, PostFavoritserializer, PostCommentserializer, Contacteserializer
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import (
@@ -74,13 +74,25 @@ class ProfileDetail(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class MyProfile(APIView):
+    permission_classes = [IsAuthenticated]
     # ---------------My Profile Detail---------------
     def get(self, request):
         queryset = get_object_or_404(Profile,user=request.user)
         serializer = Profileserializer(queryset)
         return Response(serializer.data)
 
-
+class Contactus(APIView):
+    permission_classes = [IsAuthenticated]
+    # ---------------Create Contactus---------------
+    def post(self, request):
+        try:
+            serializer = Contacteserializer(data= request.data)
+            if serializer.is_valid():
+               serializer.save(user= request.user)
+               return Response(serializer.data,status =status.HTTP_201_CREATED )
+            return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
+        except Exception as error: 
+            return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
 # ---------------Anime---------------
 class AnimeIndex(APIView):
@@ -161,6 +173,7 @@ class  AnimeReviewIndex(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
         
 class DeleteAnimeReview(APIView):
+    permission_classes = [IsAuthenticated]
 # ---------------Delete Anime Review---------------
     def delete(self, request, Review_id):
         try:
@@ -285,6 +298,7 @@ class  PostCommentIndex(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
         
 class DeletePostComment(APIView):
+    permission_classes =[IsAuthenticated]
 # ---------------Delete Post Comment---------------
     def delete(self, request, Comment_id):
         try:
@@ -297,6 +311,7 @@ class DeletePostComment(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class AddPostToFavorit(APIView):
+    permission_classes = [IsAuthenticated]
     # ---------------Add Post To Favorit---------------
     def post(self, request, Post_id):
         try:
@@ -312,6 +327,7 @@ class AddPostToFavorit(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
 class RemovePostFromFavorit(APIView):
+    permission_classes = [IsAuthenticated]
     # ---------------Remove Post From Favorit---------------
     def delete(self, request, Favorit_id):
         try:

@@ -1,4 +1,4 @@
-from .models import User,Anime, Profile, Post , Review, AnimeFavorit, PostComment, PostFavorit
+from .models import User,Anime, Profile, Post , Review, AnimeFavorit, PostComment, PostFavorit ,Contact
 from rest_framework import serializers
 
 
@@ -37,6 +37,7 @@ class Animeserializer(serializers.ModelSerializer):
 class AnimeFavoritserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only = True)
     anime = serializers.StringRelatedField()
+    anime_id = serializers.IntegerField(source= 'anime.id', read_only = True)
     anime_poster = serializers.CharField(source= 'anime.poster', read_only = True)
     class Meta:
         model = AnimeFavorit
@@ -66,6 +67,7 @@ class PostFavoritserializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     post = serializers.StringRelatedField()
     post_poster = serializers.CharField(source= 'post.poster', read_only = True)
+    user_username = serializers.CharField(source= 'user.username', read_only = True)
     class Meta:
         model = PostFavorit
         fields = '__all__'
@@ -76,3 +78,8 @@ class PostCommentserializer(serializers.ModelSerializer):
     class Meta:
         model = PostComment
         fields = ['id','user','post', 'text', 'created_at' ]
+
+class Contacteserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'

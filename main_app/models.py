@@ -39,6 +39,14 @@ class Profile(models.Model):
     def __str__(self):
         return f'Profile for {self.user.username}'
 
+class Contact(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE , related_name="contact")
+    full_name = models.CharField(max_length=10)
+    email = models.EmailField()
+    subject = models.CharField(max_length=50)
+    message = models.TextField(max_length=500)
+    def __str__(self):
+        return f'Contact from {self.user.username}'
 
 
 #---------------Anime---------------
