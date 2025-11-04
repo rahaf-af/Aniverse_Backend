@@ -21,8 +21,8 @@ urlpatterns = [
     path('post/<int:Post_id>/', PostDetail.as_view(), name= 'Post_Detail'),
     path('post/<int:Post_id>/comment/', PostCommentIndex.as_view(), name= 'Anime_Review_Index'),
     path('delete/<int:Comment_id>/comment', DeletePostComment.as_view(), name= 'Anime_Review_Index'),
-    path('addpost/<int:Post_id>/tofavorit', AddPostToFavorit.as_view(), name= 'Add_Post_To_Favorit'),
-    path('removepost/<int:Favorit_id>/fromfavorit', RemovePostFromFavorit.as_view(), name= 'Remove_Post_From_Favorit'),
+    path('addpost/<int:Post_id>/tofavorit/', AddPostToFavorit.as_view(), name= 'Add_Post_To_Favorit'),
+    path('removepost/<int:Favorit_id>/fromfavorit/', RemovePostFromFavorit.as_view(), name= 'Remove_Post_From_Favorit'),
     path('mypostfavoritlist/',MyPostToFavoritList.as_view() , name= 'My_Post_Favorit_List'),
 
 ] 

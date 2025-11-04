@@ -40,8 +40,8 @@ class Profile(models.Model):
         return f'Profile for {self.user.username}'
 
 class Contact(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE , related_name="contact")
-    full_name = models.CharField(max_length=10)
+    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="contact")
+    full_name = models.CharField(max_length=50)
     email = models.EmailField()
     subject = models.CharField(max_length=50)
     message = models.TextField(max_length=500)

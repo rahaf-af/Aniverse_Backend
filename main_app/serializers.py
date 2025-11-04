@@ -21,6 +21,10 @@ class Userserializer(serializers.ModelSerializer):
             return user
 
 class Profileserializer(serializers.ModelSerializer):
+    first_name  = serializers.CharField(source= 'user.first_name', read_only = True)
+    last_name  = serializers.CharField(source= 'user.last_name', read_only = True)
+    username = serializers.CharField(source= 'user.username', read_only = True)
+    email = serializers.CharField(source= 'user.email', read_only = True)
     user = serializers.StringRelatedField(read_only = True)
     class Meta:
         model = Profile
@@ -80,6 +84,7 @@ class PostCommentserializer(serializers.ModelSerializer):
         fields = ['id','user','post', 'text', 'created_at' ]
 
 class Contacteserializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only = True)
     class Meta:
         model = Contact
         fields = '__all__'
