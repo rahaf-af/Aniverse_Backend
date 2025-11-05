@@ -40,14 +40,19 @@ class Signup(APIView):
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
 
     
-class DeleteUser(APIView):
+class Handeluser(APIView):
      # ---------------Delete user---------------
     permission_classes = [IsAuthenticated]
     def delete(self, request):
         user = User.objects.get(id = request.user)
         user.delete()
         return Response()
-
+    # ---------------Get user info---------------
+    def get(self, request):
+        queryset = get_object_or_404(User,id=request.user.id)
+        serializer = Userserializer(queryset)
+        return Response(serializer.data)
+    
 
 
 # ---------------Profile---------------
@@ -93,6 +98,23 @@ class Contactus(APIView):
             return Response(serializer.errors,status =status.HTTP_400_BAD_REQUEST )
         except Exception as error: 
             return Response({'error':str(error)},status =status.HTTP_500_INTERNAL_SERVER_ERROR )
+        
+class Homeanime(APIView):
+    permission_classes = [AllowAny]
+    # ---------------Read Last 3 Anime---------------
+    def get(self, request ):
+        queryset = Anime.objects.order_by('-created_at')[:5]
+        serializer = Animeserializer(queryset, many=True)
+        return Response(serializer.data)
+    
+class Homeposts(APIView):
+    # ---------------Read Last 3 Post---------------
+    def get(self, request ):
+        queryset = Post.objects.order_by('-created_at')[:5]
+        serializer = Postserializer(queryset, many=True)
+        return Response(serializer.data)
+    
+
 
 # ---------------Anime---------------
 class AnimeIndex(APIView):

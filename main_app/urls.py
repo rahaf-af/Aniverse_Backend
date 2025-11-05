@@ -1,13 +1,14 @@
 from django.urls import path
-from .views import Signup, DeleteUser,MyProfile, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, MyAnimeToFavoritList, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, MyPostToFavoritList, PostCommentIndex, DeletePostComment, Contactus
+from .views import Signup, Handeluser,MyProfile, ProfileDetail, AnimeIndex, AnimeDetail, AddAnimeToFavorit, RemoveAnimeFromFavorit, AnimeReviewIndex, MyAnimeToFavoritList, DeleteAnimeReview, PostIndex, PostDetail, AddPostToFavorit, RemovePostFromFavorit, MyPostToFavoritList, PostCommentIndex, DeletePostComment, Contactus, Homeanime
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('signup/', Signup.as_view(), name='signup'),
     path('login/', TokenObtainPairView.as_view(), name='login'),
-    path('deleteuser/', DeleteUser.as_view(), name='delete_user'),
+    path('handeluser/', Handeluser.as_view(), name='handel_user'),
     path('token/refresh/',TokenRefreshView.as_view(), name='token_refresh' ),
     path('contact/',Contactus.as_view(), name='contact_us' ),
+    path('homeanime/',Homeanime.as_view(), name='home' ),
     path('profile/<int:Profile_id>/', ProfileDetail.as_view(), name= 'Profile_Detail'),
     path('myprofile/', MyProfile.as_view(), name= 'MyProfile'),
     path('animes/',AnimeIndex.as_view() , name= 'Anime_Index'),

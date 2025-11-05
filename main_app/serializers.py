@@ -21,17 +21,14 @@ class Userserializer(serializers.ModelSerializer):
             return user
 
 class Profileserializer(serializers.ModelSerializer):
-    first_name  = serializers.CharField(source= 'user.first_name', read_only = True)
-    last_name  = serializers.CharField(source= 'user.last_name', read_only = True)
-    username = serializers.CharField(source= 'user.username', read_only = True)
-    email = serializers.CharField(source= 'user.email', read_only = True)
     user = serializers.StringRelatedField(read_only = True)
     class Meta:
         model = Profile
         fields = '__all__'
 
 class Animeserializer(serializers.ModelSerializer):
-    publisher = serializers.StringRelatedField()
+    publisher_id = serializers.IntegerField(source= 'publisher.id', read_only = True)
+    publisher = serializers.StringRelatedField(read_only = True)
     review_count = serializers.IntegerField(source= 'anime_comment.count', read_only = True)
     favorit_count = serializers.IntegerField(source= 'anime_favorit.count', read_only = True)
     class Meta:
@@ -60,7 +57,8 @@ class Profileserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Postserializer(serializers.ModelSerializer):
-    auther = serializers.StringRelatedField()
+    auther_id = serializers.IntegerField(source= 'auther.id', read_only = True)
+    auther = serializers.StringRelatedField(read_only = True)
     comment_count = serializers.IntegerField(source= 'post_comment.count', read_only = True)
     favorit_count = serializers.IntegerField(source= 'post_favorit.count', read_only = True)
     class Meta:

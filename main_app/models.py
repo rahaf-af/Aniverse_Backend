@@ -57,6 +57,7 @@ class Anime (models.Model):
     genre = models.CharField(max_length=100 , default='Action')
     global_rating =models.FloatField(default=0.0)
     description = models.TextField(default= 'No description yet', null=True , blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f'{self.id}: {self.title}'
 
