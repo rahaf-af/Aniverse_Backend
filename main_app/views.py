@@ -108,6 +108,7 @@ class Homeanime(APIView):
         return Response(serializer.data)
     
 class Homeposts(APIView):
+    permission_classes = [AllowAny]
     # ---------------Read Last 3 Post---------------
     def get(self, request ):
         queryset = Post.objects.order_by('-created_at')[:5]

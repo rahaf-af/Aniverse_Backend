@@ -45,7 +45,7 @@ class AnimeFavoritserializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Reviewserializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+    user = serializers.StringRelatedField(read_only = True)
     anime = serializers.StringRelatedField()
     class Meta:
         model = Review
